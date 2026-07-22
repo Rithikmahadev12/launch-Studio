@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site progress — Launch Studio</title>
+<meta name="description" content="Track the progress of your website with Launch Studio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/progress.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="wordmark">Launch Studio</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/#work">Work</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/progress.html">Client Progress</a>
+    </nav>
+    <div class="nav-right">
+      <a href="/#contact" class="btn btn-primary btn-sm">Start a project</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap progress-page">
+
+  <!-- LIST VIEW -->
+  <section id="listView">
+    <p class="eyebrow">// client progress</p>
+    <h1>How your site is coming along</h1>
+    <p class="section-note">Pick your project below to see where it's at. Updated as we go — no need to email and ask.</p>
+
+    <div id="siteList" class="site-list">
+      <p class="loading-note">Loading…</p>
+    </div>
+  </section>
+
+  <!-- DETAIL VIEW -->
+  <section id="detailView" hidden>
+    <a href="/progress.html" class="back-link">← All projects</a>
+    <div id="siteDetail"></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span class="wordmark small">Launch Studio</span>
+    <span class="footer-copy" id="footerContact"></span>
+  </div>
+</footer>
+
+<script src="/progress.js"></script>
+</body>
+</html>
