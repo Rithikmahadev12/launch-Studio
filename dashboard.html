@@ -73,6 +73,10 @@
           <input type="url" id="live_url" name="live_url" placeholder="https://">
         </div>
         <div class="field">
+          <label for="category">Category tag (for homepage)</label>
+          <input type="text" id="category" name="category" placeholder="e.g. cafe, portfolio, e-commerce">
+        </div>
+        <div class="field">
           <label for="email">Client email</label>
           <input type="email" id="email" name="email">
         </div>
@@ -82,11 +86,27 @@
         </div>
       </div>
       <div class="field">
+        <label for="description">Short description (for homepage launch card)</label>
+        <input type="text" id="description" name="description" placeholder="One line about the project">
+      </div>
+      <div class="field">
         <label for="notes">Notes (internal only, not shown publicly)</label>
         <textarea id="notes" name="notes" rows="2"></textarea>
       </div>
+      <div class="field admin-checkbox-field">
+        <label><input type="checkbox" id="featured" name="featured"> Show on homepage "Recent launches" (needs a Live URL)</label>
+      </div>
       <button type="submit" class="btn btn-primary">Add site</button>
     </form>
+  </section>
+
+  <!-- HOMEPAGE PRICING -->
+  <section class="admin-section">
+    <h2>Homepage pricing</h2>
+    <p class="section-note">Edit the price and copy for each tier shown on the homepage. Enter one feature per line.</p>
+    <div id="pricingForms" class="admin-pricing-forms">
+      <p class="loading-note">Loading…</p>
+    </div>
   </section>
 
   <!-- EXISTING SITES -->
