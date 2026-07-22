@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launch Studio — websites, designed and shipped</title>
+<meta name="description" content="Launch Studio designs, builds, and ships websites for small businesses, founders, and independent creators.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="wordmark">Launch Studio</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="nav-right">
+      <span class="badge"><span class="dot" aria-hidden="true"></span>Accepting new projects</span>
+      <a href="#contact" class="btn btn-primary btn-sm">Start a project</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">// web design &amp; development studio</p>
+      <h1>We build the site.<br>You hit publish.</h1>
+      <p class="lede">Launch Studio designs, builds, and ships websites for small businesses, founders, and independent creators — from first sketch to a live domain.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Start a project</a>
+        <a href="#work" class="btn btn-ghost">See our work</a>
+      </div>
+    </div>
+    <div class="hero-console" role="img" aria-label="Simulated deployment console showing websites going live">
+      <div class="console-bar">
+        <span class="console-dot red"></span>
+        <span class="console-dot yellow"></span>
+        <span class="console-dot green"></span>
+        <span class="console-title">deploy — launchstudio</span>
+      </div>
+      <pre class="console-body" id="consoleBody" aria-hidden="true"></pre>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section">
+    <div class="wrap">
+      <p class="eyebrow">// what we do</p>
+      <h2>Three services. One outcome: a live website.</h2>
+      <div class="cards">
+        <article class="card">
+          <p class="card-tag">design</p>
+          <h3>Design</h3>
+          <p>We design a site that looks like your business, not a template someone else is also using this month.</p>
+        </article>
+        <article class="card">
+          <p class="card-tag">build</p>
+          <h3>Build</h3>
+          <p>We build it clean and fast — it works on a phone in a parking lot with one bar of signal, not just on our monitors.</p>
+        </article>
+        <article class="card">
+          <p class="card-tag">launch</p>
+          <h3>Launch</h3>
+          <p>We connect your domain, set up hosting, and ship it live. Then we hand you the keys — no lock-in.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK / PORTFOLIO AS DEPLOY LOG -->
+  <section id="work" class="section section-alt">
+    <div class="wrap">
+      <p class="eyebrow">// recent launches</p>
+      <h2>Sites we've shipped</h2>
+      <p class="section-note">Selected work below — swap these in for your own launched projects.</p>
+
+      <ul class="deploy-log">
+        <li class="log-row">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="log-name">marlowcoffee.com</span>
+          <span class="log-desc">Neighborhood coffee shop — online ordering, hours, and a map that actually works.</span>
+          <span class="log-tag">cafe</span>
+          <a href="#" class="log-link">visit →</a>
+        </li>
+        <li class="log-row">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="log-name">rivetfurniture.co</span>
+          <span class="log-desc">Handmade furniture studio — lookbook, materials guide, and a commission inquiry form.</span>
+          <span class="log-tag">e-commerce</span>
+          <a href="#" class="log-link">visit →</a>
+        </li>
+        <li class="log-row">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="log-name">thepaperroute.studio</span>
+          <span class="log-desc">Freelance illustrator's portfolio — case studies and a print shop.</span>
+          <span class="log-tag">portfolio</span>
+          <a href="#" class="log-link">visit →</a>
+        </li>
+        <li class="log-row">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="log-name">northbanklaw.com</span>
+          <span class="log-desc">Small law practice — practice areas, attorney bios, appointment booking.</span>
+          <span class="log-tag">services</span>
+          <a href="#" class="log-link">visit →</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="section">
+    <div class="wrap">
+      <p class="eyebrow">// pricing</p>
+      <h2>Straightforward packages</h2>
+      <div class="cards pricing-cards">
+        <article class="card price-card">
+          <p class="card-tag">starter</p>
+          <p class="price">$900</p>
+          <p class="price-desc">One page, a contact form, live in about a week.</p>
+          <ul class="price-list">
+            <li>Single-page site</li>
+            <li>Contact form</li>
+            <li>Domain + hosting setup</li>
+            <li>1 round of revisions</li>
+          </ul>
+          <p class="price-good-for">Good for: solo founders, personal brands.</p>
+          <a href="#contact" class="btn btn-ghost btn-block">Start a project</a>
+        </article>
+        <article class="card price-card featured">
+          <p class="card-tag">studio</p>
+          <p class="price">$2,400</p>
+          <p class="price-desc">Up to five pages, custom design, live in 2–3 weeks.</p>
+          <ul class="price-list">
+            <li>Up to 5 pages</li>
+            <li>Custom design &amp; copywriting pass</li>
+            <li>Basic on-page SEO</li>
+            <li>2 rounds of revisions</li>
+          </ul>
+          <p class="price-good-for">Good for: small businesses, local shops.</p>
+          <a href="#contact" class="btn btn-primary btn-block">Start a project</a>
+        </article>
+        <article class="card price-card">
+          <p class="card-tag">custom</p>
+          <p class="price">Let's talk</p>
+          <p class="price-desc">Multi-page, e-commerce, or ongoing support.</p>
+          <ul class="price-list">
+            <li>Any number of pages</li>
+            <li>Store, booking, or custom features</li>
+            <li>Ongoing edits &amp; support</li>
+            <li>Scoped to your project</li>
+          </ul>
+          <p class="price-good-for">Good for: growing businesses.</p>
+          <a href="#contact" class="btn btn-ghost btn-block">Start a project</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section section-alt">
+    <div class="wrap about-wrap">
+      <p class="eyebrow">// about</p>
+      <h2>Small studio. Direct work.</h2>
+      <p class="about-copy">Launch Studio is a small team that designs and builds websites end to end — no handoffs, no account managers, no template stretched to fit your business. You work directly with the people writing the code and shipping the site, from the first call to the day it goes live.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section">
+    <div class="wrap contact-wrap">
+      <p class="eyebrow">// contact</p>
+      <h2>Tell us about your project</h2>
+      <p class="section-note">Fill this out or email us directly — either way we reply within a day or two.</p>
+
+      <form class="contact-form" id="contactForm">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="budget">Which package fits best?</label>
+          <select id="budget" name="budget">
+            <option>Starter — $900</option>
+            <option>Studio — $2,400</option>
+            <option>Custom</option>
+            <option>Not sure yet</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="details">Project details</label>
+          <textarea id="details" name="details" rows="4" required placeholder="What are you building, and when do you need it live?"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send project details</button>
+        <p class="form-note">Or email us directly at <a href="mailto:hello@launchstudio.co">hello@launchstudio.co</a></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span class="wordmark small">Launch Studio</span>
+    <span class="footer-copy">© <span id="year"></span> Launch Studio. All sites shipped, no sites stuck in draft.</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
