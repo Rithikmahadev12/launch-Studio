@@ -13,6 +13,15 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Render (and most hosts) terminate HTTPS at a proxy in front of your app,
+// so Express sees the incoming request as plain HTTP unless it's told to
+// trust the proxy's "X-Forwarded-Proto" header. Without this, cookie.secure
+// below can't reliably detect that the connection actually is HTTPS, which
+// causes the session cookie to silently fail to persist — the classic
+// symptom being "login succeeds but immediately bounces back to the login
+// page." This line fixes that.
+app.set('trust proxy', 1);
+
 // --- Config -----------------------------------------------------------
 // Set these in your environment (Render dashboard > Environment) in production.
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'changeme123';
@@ -34,7 +43,11 @@ app.use(
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      // 'auto' looks at the (now-trusted) X-Forwarded-Proto header to
+      // decide whether the connection is really HTTPS, instead of just
+      // assuming based on NODE_ENV. Works correctly both on Render (HTTPS)
+      // and in local dev (HTTP).
+      secure: 'auto',
       maxAge: 1000 * 60 * 60 * 12, // 12 hours
     },
   })
@@ -140,7 +153,7 @@ app.put('/api/settings', requireAdmin, asyncHandler(async (req, res) => {
 // --- Sites (client projects) --------------------------------------------
 
 const PUBLIC_FIELDS =
-  'id, slug, client_name, site_name, status, progress, live_url, updated_at';
+  'id, slug, client_name, site_name, status, progress, live_url, category, description, featured, updated_at';
 const FULL_FIELDS = `${PUBLIC_FIELDS}, email, phone, notes, created_at`;
 
 // Public: list all sites. Admins (logged in) get the extra contact fields too.
@@ -180,6 +193,9 @@ app.post('/api/sites', requireAdmin, asyncHandler(async (req, res) => {
     email = '',
     phone = '',
     notes = '',
+    category = '',
+    description = '',
+    featured = false,
   } = req.body || {};
 
   if (!client_name || !site_name) {
@@ -202,6 +218,9 @@ app.post('/api/sites', requireAdmin, asyncHandler(async (req, res) => {
       email,
       phone,
       notes,
+      category,
+      description,
+      featured: Boolean(featured),
     })
     .select(FULL_FIELDS)
     .single();
@@ -229,6 +248,9 @@ app.put('/api/sites/:id', requireAdmin, asyncHandler(async (req, res) => {
     email = existing.email,
     phone = existing.phone,
     notes = existing.notes,
+    category = existing.category,
+    description = existing.description,
+    featured = existing.featured,
   } = req.body || {};
 
   const clampedProgress = Math.max(0, Math.min(100, Number(progress) || 0));
@@ -244,6 +266,9 @@ app.put('/api/sites/:id', requireAdmin, asyncHandler(async (req, res) => {
       email,
       phone,
       notes,
+      category,
+      description,
+      featured: Boolean(featured),
       updated_at: new Date().toISOString(),
     })
     .eq('id', req.params.id)
@@ -264,6 +289,40 @@ app.delete('/api/sites/:id', requireAdmin, asyncHandler(async (req, res) => {
   if (error) throw error;
   if (!data || data.length === 0) return res.status(404).json({ error: 'Not found' });
   res.json({ ok: true });
+}));
+
+// --- Pricing plans (homepage pricing section) ----------------------------
+
+// Public: list all 3 pricing tiers, in display order.
+app.get('/api/pricing', asyncHandler(async (req, res) => {
+  const { data, error } = await db
+    .from('pricing_plans')
+    .select('slug, name, price, subtitle, features, good_for, cta_label, sort_order')
+    .order('sort_order', { ascending: true });
+  if (error) throw error;
+  res.json(data);
+}));
+
+// Admin: update one pricing tier's content (tiers themselves are fixed —
+// this only edits price/copy, not the number of tiers).
+app.put('/api/pricing/:slug', requireAdmin, asyncHandler(async (req, res) => {
+  const { price, subtitle, features, good_for, cta_label } = req.body || {};
+  const updates = {};
+  if (price !== undefined) updates.price = String(price);
+  if (subtitle !== undefined) updates.subtitle = String(subtitle);
+  if (features !== undefined) updates.features = String(features);
+  if (good_for !== undefined) updates.good_for = String(good_for);
+  if (cta_label !== undefined) updates.cta_label = String(cta_label);
+
+  const { data, error } = await db
+    .from('pricing_plans')
+    .update(updates)
+    .eq('slug', req.params.slug)
+    .select('slug, name, price, subtitle, features, good_for, cta_label, sort_order')
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return res.status(404).json({ error: 'Not found' });
+  res.json(data);
 }));
 
 // --- Static files ---------------------------------------------------------
