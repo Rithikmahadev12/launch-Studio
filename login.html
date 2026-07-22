@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin login — Launch Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main class="wrap admin-login-wrap">
+  <div class="admin-login-card">
+    <p class="eyebrow">// admin</p>
+    <h1>Sign in</h1>
+    <form id="loginForm">
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autofocus>
+      </div>
+      <p id="loginError" class="admin-error" hidden>Incorrect password.</p>
+      <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+    </form>
+  </div>
+</main>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('loginError');
+    errorEl.hidden = true;
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        errorEl.hidden = false;
+        return;
+      }
+      window.location.href = '/admin';
+    } catch (err) {
+      errorEl.textContent = 'Something went wrong. Try again.';
+      errorEl.hidden = false;
+    }
+  });
+</script>
+</body>
+</html>
