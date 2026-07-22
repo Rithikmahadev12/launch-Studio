@@ -86,3 +86,31 @@
   color: #B3261E;
 }
 .btn-danger:hover { background: #B3261E; color: #fff; }
+
+.admin-checkbox-field label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: normal;
+}
+.admin-checkbox-field input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+}
+
+.admin-pricing-forms {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-pricing-form {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+}
+
+.admin-pricing-form h3 {
+  margin: 0 0 0.75rem;
+  text-transform: capitalize;
+}
