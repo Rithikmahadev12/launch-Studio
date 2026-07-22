@@ -1,6 +1,27 @@
 // Year in footer
 document.getElementById('year').textContent = new Date().getFullYear();
 
+// Pull the studio's contact email/phone from the backend so admin edits
+// (made in /admin) show up here without needing a redeploy.
+(async function loadContactInfo() {
+  try {
+    const res = await fetch('/api/settings');
+    if (!res.ok) return;
+    const settings = await res.json();
+    const emailLink = document.getElementById('contactEmailLink');
+    const note = document.getElementById('contactNote');
+    if (emailLink && settings.contact_email) {
+      emailLink.href = `mailto:${settings.contact_email}`;
+      emailLink.textContent = settings.contact_email;
+    }
+    if (note && settings.contact_phone) {
+      note.append(` · ${settings.contact_phone}`);
+    }
+  } catch (err) {
+    // Non-critical — the static fallback email in the HTML still works.
+  }
+})();
+
 // Mobile nav toggle
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = document.querySelector('.nav-links');
