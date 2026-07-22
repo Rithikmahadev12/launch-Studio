@@ -209,15 +209,52 @@ app.delete('/api/sites/:id', requireAdmin, (req, res) => {
 });
 
 // --- Static files ---------------------------------------------------------
-app.use(express.static(path.join(__dirname, 'public')));
+// Everything (index.html, styles.css, admin.js, login.html, etc.) lives
+// directly in the project root alongside server.js/db.js/data.db, so before
+// serving the root as static we block anything that isn't meant to be
+// public (source files, config, and — critically — the SQLite database,
+// which contains client names/emails/phone numbers).
+const BLOCKED_FILES = new Set([
+  'server.js',
+  'db.js',
+  'data.db',
+  'data.db-wal',
+  'data.db-shm',
+  'package.json',
+  'package-lock.json',
+  '.npmrc',
+  '.env',
+  'render.yaml',
+  'readme.md',
+  '.gitignore',
+]);
+
+app.use((req, res, next) => {
+  const requested = path.basename(req.path).toLowerCase();
+  if (BLOCKED_FILES.has(requested) || requested.startsWith('.')) {
+    return res.status(404).end();
+  }
+  next();
+});
+
+app.use(express.static(__dirname));
+
+// Exact /admin (no trailing path) should serve the dashboard page itself.
+// This must come BEFORE the '/admin' static alias below, otherwise
+// express.static sees an existing __dirname folder for the '/admin' mount
+// and issues a directory redirect instead of ever reaching this route.
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// dashboard.html / login.html reference /admin/admin.css and /admin/admin.js
+// (as if there were an /admin subfolder). Alias /admin/* to the same root
+// folder so those requests still resolve to the flat admin.css / admin.js.
+app.use('/admin', express.static(__dirname));
 
 // Friendly clean URL for individual client progress pages: /progress/some-slug
 app.get('/progress/:slug', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'progress.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'progress.html'));
 });
 
 app.listen(PORT, () => {
