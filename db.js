@@ -5,23 +5,38 @@ const Database = require('better-sqlite3');
 
 // DB_PATH lets you point this at a persistent disk on Render (see README).
 // Defaults to a local file next to this script, which is fine for local dev
-// but WILL be wiped on every deploy unless you mount a persistent disk.
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db');
+// but WILL be wiped on every deploy/restart unless you're on a paid Render
+// plan with a persistent disk attached (the free tier does not support
+// persistent disks at all).
+const FALLBACK_DB_PATH = path.join(__dirname, 'data.db');
+let DB_PATH = process.env.DB_PATH || FALLBACK_DB_PATH;
 
 // better-sqlite3 throws synchronously (crashing the process) if the parent
-// directory doesn't exist yet — this happens if DB_PATH points at a Render
-// disk mount (e.g. /data) that isn't actually attached to the service. Create
-// it defensively so a missing/unmounted path degrades gracefully instead of
-// crashing the whole app on boot.
-const dbDir = path.dirname(DB_PATH);
-if (!fs.existsSync(dbDir)) {
-  console.warn(
-    `[warning] Directory "${dbDir}" for DB_PATH did not exist — creating it. ` +
-    'If you expected a persistent Render disk here, check that it is attached ' +
-    'to this service under Disks in the Render dashboard (render.yaml alone ' +
-    'does not retroactively attach disks to an already-existing service).'
-  );
-  fs.mkdirSync(dbDir, { recursive: true });
+// directory doesn't exist or isn't writable — this happens if DB_PATH points
+// at a disk mount (e.g. /data) that isn't actually attached to the service,
+// or a path the process doesn't have permission to create. Handle that
+// gracefully instead of letting it take down the whole app on boot.
+function ensureWritableDir(dbPath) {
+  const dir = path.dirname(dbPath);
+  try {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.accessSync(dir, fs.constants.W_OK);
+    return true;
+  } catch (err) {
+    console.warn(
+      `[warning] Directory "${dir}" for DB_PATH is missing or not writable ` +
+      `(${err.code}). If you expected a persistent Render disk here, check ` +
+      'that it is attached under Disks in the Render dashboard — note the ' +
+      'free tier does not support persistent disks at all.'
+    );
+    return false;
+  }
+}
+
+if (!ensureWritableDir(DB_PATH)) {
+  console.warn(`[warning] Falling back to local path: ${FALLBACK_DB_PATH}`);
+  DB_PATH = FALLBACK_DB_PATH;
+  ensureWritableDir(DB_PATH);
 }
 
 const db = new Database(DB_PATH);
