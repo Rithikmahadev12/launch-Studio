@@ -49,6 +49,9 @@
         email: document.getElementById('email').value.trim(),
         phone: document.getElementById('phone').value.trim(),
         notes: document.getElementById('notes').value.trim(),
+        category: document.getElementById('category').value.trim(),
+        description: document.getElementById('description').value.trim(),
+        featured: document.getElementById('featured').checked,
       };
       const res = await fetch('/api/sites', {
         method: 'POST',
@@ -99,6 +102,10 @@
             <input type="url" data-field="live_url" value="${escapeHtml(site.live_url || '')}">
           </div>
           <div class="field">
+            <label>Category tag (for homepage)</label>
+            <input type="text" data-field="category" value="${escapeHtml(site.category || '')}">
+          </div>
+          <div class="field">
             <label>Client email</label>
             <input type="email" data-field="email" value="${escapeHtml(site.email || '')}">
           </div>
@@ -108,8 +115,15 @@
           </div>
         </div>
         <div class="field">
+          <label>Short description (for homepage launch card)</label>
+          <input type="text" data-field="description" value="${escapeHtml(site.description || '')}">
+        </div>
+        <div class="field">
           <label>Notes (internal only)</label>
           <textarea rows="2" data-field="notes">${escapeHtml(site.notes || '')}</textarea>
+        </div>
+        <div class="field admin-checkbox-field">
+          <label><input type="checkbox" data-field="featured" ${site.featured ? 'checked' : ''}> Show on homepage "Recent launches" (needs a Live URL)</label>
         </div>
         <div class="admin-row-actions">
           <button class="btn btn-primary btn-sm save-btn">Save changes</button>
@@ -139,7 +153,13 @@
       row.querySelector('.save-btn').addEventListener('click', async () => {
         const payload = {};
         row.querySelectorAll('[data-field]').forEach((el) => {
-          payload[el.getAttribute('data-field')] = el.type === 'number' ? Number(el.value) : el.value;
+          if (el.type === 'checkbox') {
+            payload[el.getAttribute('data-field')] = el.checked;
+          } else if (el.type === 'number') {
+            payload[el.getAttribute('data-field')] = Number(el.value);
+          } else {
+            payload[el.getAttribute('data-field')] = el.value;
+          }
         });
         const res = await fetch(`/api/sites/${id}`, {
           method: 'PUT',
@@ -167,6 +187,73 @@
     });
   }
 
+  function pricingFormHtml(plan) {
+    return `
+      <form class="admin-pricing-form" data-slug="${escapeHtml(plan.slug)}">
+        <h3>${escapeHtml(plan.name)}</h3>
+        <div class="admin-form-grid">
+          <div class="field">
+            <label>Price</label>
+            <input type="text" data-field="price" value="${escapeHtml(plan.price)}">
+          </div>
+          <div class="field">
+            <label>Button text</label>
+            <input type="text" data-field="cta_label" value="${escapeHtml(plan.cta_label)}">
+          </div>
+        </div>
+        <div class="field">
+          <label>Subtitle</label>
+          <input type="text" data-field="subtitle" value="${escapeHtml(plan.subtitle)}">
+        </div>
+        <div class="field">
+          <label>Features (one per line)</label>
+          <textarea rows="4" data-field="features">${escapeHtml(plan.features)}</textarea>
+        </div>
+        <div class="field">
+          <label>"Good for" line</label>
+          <input type="text" data-field="good_for" value="${escapeHtml(plan.good_for)}">
+        </div>
+        <div class="admin-row-actions">
+          <button type="submit" class="btn btn-primary btn-sm">Save ${escapeHtml(plan.name)}</button>
+          <span class="admin-saved plan-saved" hidden>Saved</span>
+        </div>
+      </form>
+    `;
+  }
+
+  async function loadPricing() {
+    const container = document.getElementById('pricingForms');
+    const res = await fetch('/api/pricing');
+    const plans = await res.json();
+    container.innerHTML = plans.map(pricingFormHtml).join('');
+    wirePricingForms();
+  }
+
+  function wirePricingForms() {
+    document.querySelectorAll('.admin-pricing-form').forEach((form) => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const slug = form.getAttribute('data-slug');
+        const payload = {};
+        form.querySelectorAll('[data-field]').forEach((el) => {
+          payload[el.getAttribute('data-field')] = el.value;
+        });
+        const res = await fetch(`/api/pricing/${slug}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const saved = form.querySelector('.plan-saved');
+          saved.hidden = false;
+          setTimeout(() => (saved.hidden = true), 2000);
+        } else {
+          alert('Could not save pricing');
+        }
+      });
+    });
+  }
+
   function wireLogout() {
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await fetch('/api/logout', { method: 'POST' });
@@ -185,5 +272,6 @@
     wireAddForm();
     wireLogout();
     loadSites();
+    loadPricing();
   })();
 })();
