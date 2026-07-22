@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Launch Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="wordmark">Launch Studio</a>
+    <span class="badge">Admin</span>
+    <div class="nav-right">
+      <button id="logoutBtn" class="btn btn-ghost btn-sm">Log out</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap admin-wrap">
+
+  <!-- STUDIO CONTACT SETTINGS -->
+  <section class="admin-section">
+    <h2>Studio contact info</h2>
+    <p class="section-note">This is the email and phone number shown to visitors on the main site and progress pages.</p>
+    <form id="settingsForm" class="admin-form">
+      <div class="field">
+        <label for="contact_email">Email</label>
+        <input type="email" id="contact_email" name="contact_email">
+      </div>
+      <div class="field">
+        <label for="contact_phone">Phone</label>
+        <input type="text" id="contact_phone" name="contact_phone" placeholder="(555) 555-0100">
+      </div>
+      <button type="submit" class="btn btn-primary">Save contact info</button>
+      <span id="settingsSaved" class="admin-saved" hidden>Saved</span>
+    </form>
+  </section>
+
+  <!-- ADD NEW CLIENT SITE -->
+  <section class="admin-section">
+    <h2>Add a client site</h2>
+    <form id="addSiteForm" class="admin-form">
+      <div class="admin-form-grid">
+        <div class="field">
+          <label for="client_name">Client name</label>
+          <input type="text" id="client_name" name="client_name" required>
+        </div>
+        <div class="field">
+          <label for="site_name">Site name</label>
+          <input type="text" id="site_name" name="site_name" required>
+        </div>
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option>In Design</option>
+            <option>Building</option>
+            <option>In Review</option>
+            <option>Live</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="progress">Progress (%)</label>
+          <input type="number" id="progress" name="progress" min="0" max="100" value="0">
+        </div>
+        <div class="field">
+          <label for="live_url">Live URL (optional)</label>
+          <input type="url" id="live_url" name="live_url" placeholder="https://">
+        </div>
+        <div class="field">
+          <label for="email">Client email</label>
+          <input type="email" id="email" name="email">
+        </div>
+        <div class="field">
+          <label for="phone">Client phone</label>
+          <input type="text" id="phone" name="phone">
+        </div>
+      </div>
+      <div class="field">
+        <label for="notes">Notes (internal only, not shown publicly)</label>
+        <textarea id="notes" name="notes" rows="2"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Add site</button>
+    </form>
+  </section>
+
+  <!-- EXISTING SITES -->
+  <section class="admin-section">
+    <h2>Client sites</h2>
+    <div id="sitesList" class="admin-sites-list">
+      <p class="loading-note">Loading…</p>
+    </div>
+  </section>
+
+</main>
+
+<script src="/admin/admin.js"></script>
+</body>
+</html>
