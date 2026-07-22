@@ -22,6 +22,86 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 })();
 
+// Recent launches: pulled from sites marked "featured" in /admin. Starts
+// empty until you ship your first client site and flip that toggle.
+(async function loadLaunches() {
+  const list = document.getElementById('launchesList');
+  const note = document.getElementById('launchesNote');
+  if (!list) return;
+  try {
+    const res = await fetch('/api/sites');
+    if (!res.ok) throw new Error('failed to load sites');
+    const sites = await res.json();
+    const launches = sites.filter((s) => s.featured && s.live_url);
+
+    if (launches.length === 0) {
+      if (note) note.textContent = "We're just getting started — check back soon for shipped projects.";
+      list.innerHTML = '';
+      return;
+    }
+
+    if (note) note.textContent = 'Selected work from clients we\u2019ve shipped for.';
+    list.innerHTML = launches.map((site) => {
+      let displayUrl = site.live_url;
+      try {
+        const u = new URL(site.live_url);
+        displayUrl = u.hostname + (u.pathname !== '/' ? u.pathname : '');
+      } catch (e) {
+        // live_url wasn't a full URL — show it as typed.
+      }
+      const safeUrl = site.live_url.replace(/"/g, '&quot;');
+      return `
+        <li class="log-row">
+          <span class="dot" aria-hidden="true"></span>
+          <span class="log-name">${escapeHtml(displayUrl)}</span>
+          <span class="log-desc">${escapeHtml(site.description || '')}</span>
+          <span class="log-tag">${escapeHtml(site.category || '')}</span>
+          <a href="${safeUrl}" class="log-link" target="_blank" rel="noopener">visit →</a>
+        </li>
+      `;
+    }).join('');
+  } catch (err) {
+    if (note) note.textContent = "We're just getting started — check back soon for shipped projects.";
+  }
+})();
+
+// Pricing: tiers are fixed (starter/studio/custom) but their price and copy
+// are editable in /admin, so pull the live values in on load.
+(async function loadPricing() {
+  const cardsWrap = document.getElementById('pricingCards');
+  if (!cardsWrap) return;
+  try {
+    const res = await fetch('/api/pricing');
+    if (!res.ok) return;
+    const plans = await res.json();
+    plans.forEach((plan) => {
+      const card = cardsWrap.querySelector(`[data-plan="${plan.slug}"]`);
+      if (!card) return;
+      const priceEl = card.querySelector('[data-field="price"]');
+      const subtitleEl = card.querySelector('[data-field="subtitle"]');
+      const featuresEl = card.querySelector('[data-field="features"]');
+      const goodForEl = card.querySelector('[data-field="good_for"]');
+      const ctaEl = card.querySelector('[data-field="cta_label"]');
+      if (priceEl) priceEl.textContent = plan.price;
+      if (subtitleEl) subtitleEl.textContent = plan.subtitle;
+      if (goodForEl) goodForEl.textContent = plan.good_for;
+      if (ctaEl) ctaEl.textContent = plan.cta_label;
+      if (featuresEl && plan.features) {
+        const items = plan.features.split('\n').map((f) => f.trim()).filter(Boolean);
+        featuresEl.innerHTML = items.map((f) => `<li>${escapeHtml(f)}</li>`).join('');
+      }
+    });
+  } catch (err) {
+    // Non-critical — the static fallback pricing in the HTML still works.
+  }
+})();
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+
 // Mobile nav toggle
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = document.querySelector('.nav-links');
