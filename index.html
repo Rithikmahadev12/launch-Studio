@@ -21,6 +21,7 @@
       <a href="#pricing">Pricing</a>
       <a href="#about">About</a>
       <a href="/progress.html">Client Progress</a>
+      <a href="/admin">Admin</a>
     </nav>
     <div class="nav-right">
       <span class="badge"><span class="dot" aria-hidden="true"></span>Accepting new projects</span>
@@ -86,38 +87,9 @@
     <div class="wrap">
       <p class="eyebrow">// recent launches</p>
       <h2>Sites we've shipped</h2>
-      <p class="section-note">Selected work below — swap these in for your own launched projects.</p>
+      <p class="section-note" id="launchesNote">Selected work from clients we've shipped for.</p>
 
-      <ul class="deploy-log">
-        <li class="log-row">
-          <span class="dot" aria-hidden="true"></span>
-          <span class="log-name">marlowcoffee.com</span>
-          <span class="log-desc">Neighborhood coffee shop — online ordering, hours, and a map that actually works.</span>
-          <span class="log-tag">cafe</span>
-          <a href="#" class="log-link">visit →</a>
-        </li>
-        <li class="log-row">
-          <span class="dot" aria-hidden="true"></span>
-          <span class="log-name">rivetfurniture.co</span>
-          <span class="log-desc">Handmade furniture studio — lookbook, materials guide, and a commission inquiry form.</span>
-          <span class="log-tag">e-commerce</span>
-          <a href="#" class="log-link">visit →</a>
-        </li>
-        <li class="log-row">
-          <span class="dot" aria-hidden="true"></span>
-          <span class="log-name">thepaperroute.studio</span>
-          <span class="log-desc">Freelance illustrator's portfolio — case studies and a print shop.</span>
-          <span class="log-tag">portfolio</span>
-          <a href="#" class="log-link">visit →</a>
-        </li>
-        <li class="log-row">
-          <span class="dot" aria-hidden="true"></span>
-          <span class="log-name">northbanklaw.com</span>
-          <span class="log-desc">Small law practice — practice areas, attorney bios, appointment booking.</span>
-          <span class="log-tag">services</span>
-          <a href="#" class="log-link">visit →</a>
-        </li>
-      </ul>
+      <ul class="deploy-log" id="launchesList"></ul>
     </div>
   </section>
 
@@ -126,45 +98,45 @@
     <div class="wrap">
       <p class="eyebrow">// pricing</p>
       <h2>Straightforward packages</h2>
-      <div class="cards pricing-cards">
-        <article class="card price-card">
+      <div class="cards pricing-cards" id="pricingCards">
+        <article class="card price-card" data-plan="starter">
           <p class="card-tag">starter</p>
-          <p class="price">$900</p>
-          <p class="price-desc">One page, a contact form, live in about a week.</p>
-          <ul class="price-list">
+          <p class="price" data-field="price">$900</p>
+          <p class="price-desc" data-field="subtitle">One page, a contact form, live in about a week.</p>
+          <ul class="price-list" data-field="features">
             <li>Single-page site</li>
             <li>Contact form</li>
             <li>Domain + hosting setup</li>
             <li>1 round of revisions</li>
           </ul>
-          <p class="price-good-for">Good for: solo founders, personal brands.</p>
-          <a href="#contact" class="btn btn-ghost btn-block">Start a project</a>
+          <p class="price-good-for" data-field="good_for">Good for: solo founders, personal brands.</p>
+          <a href="#contact" class="btn btn-ghost btn-block" data-field="cta_label">Start a project</a>
         </article>
-        <article class="card price-card featured">
+        <article class="card price-card featured" data-plan="studio">
           <p class="card-tag">studio</p>
-          <p class="price">$2,400</p>
-          <p class="price-desc">Up to five pages, custom design, live in 2–3 weeks.</p>
-          <ul class="price-list">
+          <p class="price" data-field="price">$2,400</p>
+          <p class="price-desc" data-field="subtitle">Up to five pages, custom design, live in 2–3 weeks.</p>
+          <ul class="price-list" data-field="features">
             <li>Up to 5 pages</li>
             <li>Custom design &amp; copywriting pass</li>
             <li>Basic on-page SEO</li>
             <li>2 rounds of revisions</li>
           </ul>
-          <p class="price-good-for">Good for: small businesses, local shops.</p>
-          <a href="#contact" class="btn btn-primary btn-block">Start a project</a>
+          <p class="price-good-for" data-field="good_for">Good for: small businesses, local shops.</p>
+          <a href="#contact" class="btn btn-primary btn-block" data-field="cta_label">Start a project</a>
         </article>
-        <article class="card price-card">
+        <article class="card price-card" data-plan="custom">
           <p class="card-tag">custom</p>
-          <p class="price">Let's talk</p>
-          <p class="price-desc">Multi-page, e-commerce, or ongoing support.</p>
-          <ul class="price-list">
+          <p class="price" data-field="price">Let's talk</p>
+          <p class="price-desc" data-field="subtitle">Multi-page, e-commerce, or ongoing support.</p>
+          <ul class="price-list" data-field="features">
             <li>Any number of pages</li>
             <li>Store, booking, or custom features</li>
             <li>Ongoing edits &amp; support</li>
             <li>Scoped to your project</li>
           </ul>
-          <p class="price-good-for">Good for: growing businesses.</p>
-          <a href="#contact" class="btn btn-ghost btn-block">Start a project</a>
+          <p class="price-good-for" data-field="good_for">Good for: growing businesses.</p>
+          <a href="#contact" class="btn btn-ghost btn-block" data-field="cta_label">Start a project</a>
         </article>
       </div>
     </div>
