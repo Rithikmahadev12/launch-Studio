@@ -24,6 +24,8 @@
   function wireSettingsForm() {
     document.getElementById('settingsForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      // Textareas hold one email/phone per line — stored as-is, and split
+      // back out on the public pages.
       const contact_email = document.getElementById('contact_email').value.trim();
       const contact_phone = document.getElementById('contact_phone').value.trim();
       await fetch('/api/settings', {
@@ -254,6 +256,114 @@
     });
   }
 
+  function reviewRowHtml(review) {
+    return `
+      <div class="admin-site-row" data-id="${review.id}">
+        <div class="admin-form-grid">
+          <div class="field">
+            <label>Client / business name</label>
+            <input type="text" data-field="client_name" value="${escapeHtml(review.client_name)}">
+          </div>
+          <div class="field">
+            <label>Rating (1–5)</label>
+            <input type="number" min="1" max="5" data-field="rating" value="${review.rating}">
+          </div>
+        </div>
+        <div class="field">
+          <label>Review</label>
+          <textarea rows="3" data-field="quote">${escapeHtml(review.quote)}</textarea>
+        </div>
+        <div class="field admin-checkbox-field">
+          <label><input type="checkbox" data-field="published" ${review.published ? 'checked' : ''}> Published</label>
+        </div>
+        <div class="admin-row-actions">
+          <button class="btn btn-primary btn-sm save-review-btn">Save changes</button>
+          <button class="btn btn-danger btn-sm delete-review-btn">Delete</button>
+          <span class="admin-saved row-saved" hidden>Saved</span>
+        </div>
+      </div>
+    `;
+  }
+
+  async function loadReviews() {
+    const container = document.getElementById('reviewsList');
+    const res = await fetch('/api/reviews');
+    const reviews = await res.json();
+    if (!Array.isArray(reviews) || reviews.length === 0) {
+      container.innerHTML = '<p class="loading-note">No reviews yet — add one above.</p>';
+      return;
+    }
+    container.innerHTML = reviews.map(reviewRowHtml).join('');
+    wireReviewRows();
+  }
+
+  function wireReviewRows() {
+    document.querySelectorAll('#reviewsList .admin-site-row').forEach((row) => {
+      const id = row.getAttribute('data-id');
+
+      row.querySelector('.save-review-btn').addEventListener('click', async () => {
+        const payload = {};
+        row.querySelectorAll('[data-field]').forEach((el) => {
+          if (el.type === 'checkbox') {
+            payload[el.getAttribute('data-field')] = el.checked;
+          } else if (el.type === 'number') {
+            payload[el.getAttribute('data-field')] = Number(el.value);
+          } else {
+            payload[el.getAttribute('data-field')] = el.value;
+          }
+        });
+        const res = await fetch(`/api/reviews/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          const saved = row.querySelector('.row-saved');
+          saved.hidden = false;
+          setTimeout(() => (saved.hidden = true), 2000);
+        } else {
+          alert('Could not save review');
+        }
+      });
+
+      row.querySelector('.delete-review-btn').addEventListener('click', async () => {
+        if (!confirm('Delete this review? This cannot be undone.')) return;
+        const res = await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          row.remove();
+        } else {
+          alert('Could not delete review');
+        }
+      });
+    });
+  }
+
+  function wireAddReviewForm() {
+    document.getElementById('addReviewForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        client_name: document.getElementById('review_client_name').value.trim(),
+        rating: Number(document.getElementById('review_rating').value) || 5,
+        quote: document.getElementById('review_quote').value.trim(),
+        published: document.getElementById('review_published').checked,
+      };
+      const res = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        e.target.reset();
+        document.getElementById('review_rating').value = 5;
+        document.getElementById('review_published').checked = true;
+        loadReviews();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Could not add review');
+      }
+    });
+  }
+
   function wireLogout() {
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await fetch('/api/logout', { method: 'POST' });
@@ -270,8 +380,10 @@
     loadSettings();
     wireSettingsForm();
     wireAddForm();
+    wireAddReviewForm();
     wireLogout();
     loadSites();
     loadPricing();
+    loadReviews();
   })();
 })();
