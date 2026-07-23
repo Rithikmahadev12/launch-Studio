@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviews — Launch Studio</title>
+<meta name="description" content="What clients say about working with Launch Studio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="wordmark">Launch Studio</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/#work">Work</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/reviews.html">Reviews</a>
+      <a href="/payment.html">Payment</a>
+      <a href="/progress.html">Client Progress</a>
+      <a href="/admin">Admin</a>
+    </nav>
+    <div class="nav-right">
+      <a href="/#contact" class="btn btn-primary btn-sm">Start a project</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap reviews-page">
+  <p class="eyebrow">// reviews</p>
+  <h1>What clients say</h1>
+  <p class="section-note">Real feedback from people we've built and shipped sites for.</p>
+
+  <p class="reviews-summary" id="reviewsSummary" hidden></p>
+
+  <div id="reviewCards" class="review-cards">
+    <p class="loading-note">Loading…</p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span class="wordmark small">Launch Studio</span>
+    <span class="footer-copy">© <span id="year"></span> Launch Studio. All sites shipped, no sites stuck in draft.</span>
+  </div>
+</footer>
+
+<script src="/reviews.js"></script>
+</body>
+</html>
