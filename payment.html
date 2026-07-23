@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment — Launch Studio</title>
+<meta name="description" content="How payment works with Launch Studio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="wordmark">Launch Studio</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/#work">Work</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/reviews.html">Reviews</a>
+      <a href="/payment.html">Payment</a>
+      <a href="/progress.html">Client Progress</a>
+      <a href="/admin">Admin</a>
+    </nav>
+    <div class="nav-right">
+      <a href="/#contact" class="btn btn-primary btn-sm">Start a project</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main class="wrap payment-page">
+  <p class="eyebrow">// payment</p>
+  <h1>How payment works</h1>
+  <p class="section-note">We keep this simple and handle it directly with you — no card form on this site.</p>
+
+  <div class="payment-card">
+    <h3>We arrange payment over email</h3>
+    <p>We don't take card details or payments through the website. Once we've scoped your project together, we'll follow up by email to sort out the details:</p>
+    <ol class="payment-steps">
+      <li>We agree on the package and price (see <a href="/#pricing">pricing</a>).</li>
+      <li>We'll email you an invoice and walk through the payment method that works best for you.</li>
+      <li>Work starts once that's confirmed — you'll always know the price before anything is charged.</li>
+    </ol>
+    <p>If you've already started a project with us and have a payment question, just reply to any email thread we've had, or reach out below.</p>
+
+    <div class="payment-contact">
+      Questions about payment? Email us at <span id="contactEmails"><a href="mailto:hello@launchstudio.co">hello@launchstudio.co</a></span><span id="contactPhones"></span>
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span class="wordmark small">Launch Studio</span>
+    <span class="footer-copy">© <span id="year"></span> Launch Studio. All sites shipped, no sites stuck in draft.</span>
+  </div>
+</footer>
+
+<script src="/payment.js"></script>
+</body>
+</html>
