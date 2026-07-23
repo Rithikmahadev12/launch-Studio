@@ -27,15 +27,15 @@
   <!-- STUDIO CONTACT SETTINGS -->
   <section class="admin-section">
     <h2>Studio contact info</h2>
-    <p class="section-note">This is the email and phone number shown to visitors on the main site and progress pages.</p>
+    <p class="section-note">Shown to visitors on the main site and progress pages. Add more than one email or phone number by putting each on its own line.</p>
     <form id="settingsForm" class="admin-form">
       <div class="field">
-        <label for="contact_email">Email</label>
-        <input type="email" id="contact_email" name="contact_email">
+        <label for="contact_email">Email(s) — one per line</label>
+        <textarea id="contact_email" name="contact_email" rows="2" placeholder="hello@launchstudio.co&#10;sales@launchstudio.co"></textarea>
       </div>
       <div class="field">
-        <label for="contact_phone">Phone</label>
-        <input type="text" id="contact_phone" name="contact_phone" placeholder="(555) 555-0100">
+        <label for="contact_phone">Phone number(s) — one per line</label>
+        <textarea id="contact_phone" name="contact_phone" rows="2" placeholder="(555) 555-0100&#10;(555) 555-0199"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Save contact info</button>
       <span id="settingsSaved" class="admin-saved" hidden>Saved</span>
@@ -105,6 +105,37 @@
     <h2>Homepage pricing</h2>
     <p class="section-note">Edit the price and copy for each tier shown on the homepage. Enter one feature per line.</p>
     <div id="pricingForms" class="admin-pricing-forms">
+      <p class="loading-note">Loading…</p>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="admin-section">
+    <h2>Reviews</h2>
+    <p class="section-note">These show up on the public <a href="/reviews.html" target="_blank">/reviews.html</a> page. Uncheck "Published" to hide a review without deleting it.</p>
+
+    <form id="addReviewForm" class="admin-form">
+      <div class="admin-form-grid">
+        <div class="field">
+          <label for="review_client_name">Client / business name</label>
+          <input type="text" id="review_client_name" name="client_name" required>
+        </div>
+        <div class="field">
+          <label for="review_rating">Rating (1–5)</label>
+          <input type="number" id="review_rating" name="rating" min="1" max="5" value="5">
+        </div>
+      </div>
+      <div class="field">
+        <label for="review_quote">Review</label>
+        <textarea id="review_quote" name="quote" rows="3" required></textarea>
+      </div>
+      <div class="field admin-checkbox-field">
+        <label><input type="checkbox" id="review_published" name="published" checked> Published (visible on the reviews page)</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Add review</button>
+    </form>
+
+    <div id="reviewsList" class="admin-sites-list">
       <p class="loading-note">Loading…</p>
     </div>
   </section>
