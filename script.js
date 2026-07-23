@@ -3,19 +3,34 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 // Pull the studio's contact email/phone from the backend so admin edits
 // (made in /admin) show up here without needing a redeploy.
+// Settings store contact_email / contact_phone as one entry per line (or
+// comma-separated) so the studio can list more than one address/number.
+function splitContactList(value) {
+  if (!value) return [];
+  return String(value)
+    .split(/[\n,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 (async function loadContactInfo() {
   try {
     const res = await fetch('/api/settings');
     if (!res.ok) return;
     const settings = await res.json();
-    const emailLink = document.getElementById('contactEmailLink');
-    const note = document.getElementById('contactNote');
-    if (emailLink && settings.contact_email) {
-      emailLink.href = `mailto:${settings.contact_email}`;
-      emailLink.textContent = settings.contact_email;
+    const emailsWrap = document.getElementById('contactEmails');
+    const phonesWrap = document.getElementById('contactPhones');
+
+    const emails = splitContactList(settings.contact_email);
+    const phones = splitContactList(settings.contact_phone);
+
+    if (emailsWrap && emails.length) {
+      emailsWrap.innerHTML = emails
+        .map((e) => `<a href="mailto:${escapeHtml(e)}">${escapeHtml(e)}</a>`)
+        .join(', ');
     }
-    if (note && settings.contact_phone) {
-      note.append(` · ${settings.contact_phone}`);
+    if (phonesWrap && phones.length) {
+      phonesWrap.textContent = ` · ${phones.join(' · ')}`;
     }
   } catch (err) {
     // Non-critical — the static fallback email in the HTML still works.
@@ -89,6 +104,16 @@ document.getElementById('year').textContent = new Date().getFullYear();
       if (featuresEl && plan.features) {
         const items = plan.features.split('\n').map((f) => f.trim()).filter(Boolean);
         featuresEl.innerHTML = items.map((f) => `<li>${escapeHtml(f)}</li>`).join('');
+      }
+
+      // Keep the contact form's "Which package fits best?" dropdown in sync
+      // with whatever price/name is set in /admin, instead of leaving it
+      // hardcoded to the original $900 / $2,400 copy.
+      const option = document.querySelector(`#budget option[data-plan="${plan.slug}"]`);
+      if (option) {
+        option.textContent = plan.slug === 'custom'
+          ? plan.name
+          : `${plan.name} — ${plan.price}`;
       }
     });
   } catch (err) {
