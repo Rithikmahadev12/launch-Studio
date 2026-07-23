@@ -325,6 +325,89 @@ app.put('/api/pricing/:slug', requireAdmin, asyncHandler(async (req, res) => {
   res.json(data);
 }));
 
+// --- Reviews (public reviews page) ---------------------------------------
+
+// Public: published reviews only. Admins (logged in) get everything,
+// including unpublished drafts, so they can preview before publishing.
+app.get('/api/reviews', asyncHandler(async (req, res) => {
+  const isAdmin = Boolean(req.session && req.session.isAdmin);
+  let query = db.from('reviews').select('id, client_name, rating, quote, published, created_at');
+  if (!isAdmin) query = query.eq('published', true);
+  const { data, error } = await query.order('created_at', { ascending: false });
+  if (error) throw error;
+  res.json(data);
+}));
+
+// Admin: add a new review.
+app.post('/api/reviews', requireAdmin, asyncHandler(async (req, res) => {
+  const { client_name, rating = 5, quote, published = true } = req.body || {};
+  if (!client_name || !quote) {
+    return res.status(400).json({ error: 'client_name and quote are required' });
+  }
+  const clampedRating = Math.max(1, Math.min(5, Number(rating) || 5));
+
+  const { data, error } = await db
+    .from('reviews')
+    .insert({
+      client_name,
+      rating: clampedRating,
+      quote,
+      published: Boolean(published),
+    })
+    .select('id, client_name, rating, quote, published, created_at')
+    .single();
+  if (error) throw error;
+
+  res.status(201).json(data);
+}));
+
+// Admin: update an existing review (e.g. toggle published, fix a typo).
+app.put('/api/reviews/:id', requireAdmin, asyncHandler(async (req, res) => {
+  const { data: existing, error: fetchError } = await db
+    .from('reviews')
+    .select('*')
+    .eq('id', req.params.id)
+    .maybeSingle();
+  if (fetchError) throw fetchError;
+  if (!existing) return res.status(404).json({ error: 'Not found' });
+
+  const {
+    client_name = existing.client_name,
+    rating = existing.rating,
+    quote = existing.quote,
+    published = existing.published,
+  } = req.body || {};
+
+  const clampedRating = Math.max(1, Math.min(5, Number(rating) || 5));
+
+  const { data, error } = await db
+    .from('reviews')
+    .update({
+      client_name,
+      rating: clampedRating,
+      quote,
+      published: Boolean(published),
+    })
+    .eq('id', req.params.id)
+    .select('id, client_name, rating, quote, published, created_at')
+    .single();
+  if (error) throw error;
+
+  res.json(data);
+}));
+
+// Admin: delete a review.
+app.delete('/api/reviews/:id', requireAdmin, asyncHandler(async (req, res) => {
+  const { data, error } = await db
+    .from('reviews')
+    .delete()
+    .eq('id', req.params.id)
+    .select('id');
+  if (error) throw error;
+  if (!data || data.length === 0) return res.status(404).json({ error: 'Not found' });
+  res.json({ ok: true });
+}));
+
 // --- Static files ---------------------------------------------------------
 // Everything (index.html, styles.css, admin.js, login.html, etc.) lives
 // directly in the project root alongside server.js/db.js/data.db, so before
