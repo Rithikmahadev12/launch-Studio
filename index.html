@@ -20,6 +20,8 @@
       <a href="#work">Work</a>
       <a href="#pricing">Pricing</a>
       <a href="#about">About</a>
+      <a href="/reviews.html">Reviews</a>
+      <a href="/payment.html">Payment</a>
       <a href="/progress.html">Client Progress</a>
       <a href="/admin">Admin</a>
     </nav>
@@ -170,9 +172,9 @@
         <div class="field">
           <label for="budget">Which package fits best?</label>
           <select id="budget" name="budget">
-            <option>Starter — $900</option>
-            <option>Studio — $2,400</option>
-            <option>Custom</option>
+            <option data-plan="starter">Starter — $900</option>
+            <option data-plan="studio">Studio — $2,400</option>
+            <option data-plan="custom">Custom</option>
             <option>Not sure yet</option>
           </select>
         </div>
@@ -181,7 +183,7 @@
           <textarea id="details" name="details" rows="4" required placeholder="What are you building, and when do you need it live?"></textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Send project details</button>
-        <p class="form-note" id="contactNote">Or email us directly at <a href="mailto:hello@launchstudio.co" id="contactEmailLink">hello@launchstudio.co</a></p>
+        <p class="form-note" id="contactNote">Or reach us directly at <span id="contactEmails"><a href="mailto:hello@launchstudio.co">hello@launchstudio.co</a></span><span id="contactPhones"></span></p>
       </form>
     </div>
   </section>
