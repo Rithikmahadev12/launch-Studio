@@ -150,6 +150,43 @@ app.put('/api/settings', requireAdmin, asyncHandler(async (req, res) => {
   res.json(settings);
 }));
 
+// --- Leads (public "start a project" contact form) -----------------------
+// Anyone can submit this — no auth. It creates a site record with status
+// "Checking" so it shows up in the admin dashboard right away, and the
+// client already has a working progress page they can check while you
+// decide whether to take the project on.
+app.post('/api/leads', asyncHandler(async (req, res) => {
+  const { name, email, budget = '', details = '' } = req.body || {};
+
+  if (!name || !String(name).trim() || !email || !String(email).trim() || !details || !String(details).trim()) {
+    return res.status(400).json({ error: 'name, email, and details are required' });
+  }
+
+  const baseSlug = slugify(name);
+  const slug = await uniqueSlug(baseSlug || 'project');
+
+  const notesParts = [];
+  if (budget) notesParts.push(`Package interest: ${budget}`);
+  notesParts.push(details);
+
+  const { data, error } = await db
+    .from('sites')
+    .insert({
+      slug,
+      client_name: String(name).trim(),
+      site_name: `${String(name).trim()} — new inquiry`,
+      status: 'Checking',
+      progress: 0,
+      email: String(email).trim(),
+      notes: notesParts.join('\n\n'),
+    })
+    .select('slug')
+    .single();
+  if (error) throw error;
+
+  res.status(201).json({ slug: data.slug });
+}));
+
 // --- Sites (client projects) --------------------------------------------
 
 const PUBLIC_FIELDS =
