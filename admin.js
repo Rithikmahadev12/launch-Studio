@@ -90,7 +90,7 @@
           <div class="field">
             <label>Status</label>
             <select data-field="status">
-              ${['In Design', 'Building', 'In Review', 'Live'].map(
+              ${['Checking', 'In Design', 'Building', 'In Review', 'Live'].map(
                 (s) => `<option ${s === site.status ? 'selected' : ''}>${s}</option>`
               ).join('')}
             </select>
