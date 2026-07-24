@@ -138,15 +138,37 @@ if (navToggle && navLinks) {
   });
 }
 
-// Contact form: no backend on a static host, so we confirm locally.
-// To actually receive submissions, wire this up to a form service
-// (Formspree, Netlify Forms, Getform, etc.) — see README.
+// Contact form: submits to our own backend (POST /api/leads), which creates
+// a client site record with status "Checking" — so it shows up in the admin
+// dashboard right away, and the person gets a working progress page link
+// immediately while we decide whether to take the project on.
 const form = document.getElementById('contactForm');
 if (form) {
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = form.name.value.trim();
-    form.innerHTML = `<p style="margin:0;">Thanks${name ? ', ' + name : ''} — we've got your project details. We reply within a day or two.</p>`;
+    const email = form.email.value.trim();
+    const budget = form.budget.value;
+    const details = form.details.value.trim();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, budget, details }),
+      });
+      if (!res.ok) throw new Error('request failed');
+      const data = await res.json();
+      const trackLine = data.slug
+        ? ` You can check on it any time at <a href="/progress/${encodeURIComponent(data.slug)}">this link</a> — it'll show as "Checking" while we take a look.`
+        : '';
+      form.innerHTML = `<p style="margin:0;">Thanks${name ? ', ' + name : ''} — we've got your project details. We reply within a day or two.${trackLine}</p>`;
+    } catch (err) {
+      if (submitBtn) submitBtn.disabled = false;
+      alert("Something went wrong sending your details — mind emailing us directly instead?");
+    }
   });
 }
 
